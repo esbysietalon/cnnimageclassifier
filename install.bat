@@ -1,28 +1,33 @@
+@echo Installing python dependencies..
+
+@echo off
 pip install Keras
 pip install Theano
 pip install tensorflow
 pip install pathlib
-
-mkdir results
-mkdir internal
+@echo Creating folder structures..
+mkdir results >nul 2>&1
+mkdir internal >nul 2>&1
 cd internal
-mkdir test_set
+mkdir test_set >nul 2>&1
 cd test_set
-mkdir normal
-mkdir abnormal
+mkdir normal >nul 2>&1
+mkdir abnormal >nul 2>&1
 cd ..
-mkdir training_set
+mkdir training_set >nul 2>&1
 cd training_set
-mkdir normal
-mkdir abnormal
+mkdir normal >nul 2>&1
+mkdir abnormal >nul 2>&1
 cd ..
 cd ..
-mkdir bucket
+mkdir bucket >nul 2>&1
 cd bucket
-mkdir abnormal
-mkdir normal
+mkdir abnormal >nul 2>&1
+mkdir normal >nul 2>&1
 cd ..
-
-echo @echo off >> start.bat
-echo TITLE CNN IMAGE CLASSIFIER v0.2.7 >> start.bat
-echo python cnn.py >> start.bat
+@echo Creating start.bat..
+del start.bat >nul 2>&1
+@echo @echo off >> start.bat
+@echo TITLE CNN IMAGE CLASSIFIER v0.2.7 >> start.bat
+@echo python cnn.py >> start.bat
+@echo Installation complete.
