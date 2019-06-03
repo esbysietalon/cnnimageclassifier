@@ -13,6 +13,8 @@ from keras.layers import Flatten
 from keras.layers import MaxPooling2D
 from keras.models import Sequential
 from keras.models import load_model
+from keras.callbacks import ModelCheckpoint
+from keras.callbacks import TensorBoard
 from keras.preprocessing.image import ImageDataGenerator
 
 from pathlib import Path
@@ -113,7 +115,7 @@ def printTutorial(page):
         print("1 - Using the Classifier")
 def printIntro():
     print("===========================================")
-    print("       CNN IMAGE CLASSIFIER v0.2.8")
+    print("       CNN IMAGE CLASSIFIER v0.2.9")
     print("===========================================")
 def openListFiles():
     normalList = open("results/normallist.txt", "w+")
@@ -421,7 +423,11 @@ while 1==1:
                 user_input = str(input()).split()[0]
                 if user_input.casefold() == "y" or user_input.casefold() == "yes":
                     confirmSettings = True
-                    classifier.fit_generator(training_set, steps_per_epoch, epochs, validation_data = test_set, validation_steps = validation_steps)
+                    
+                    checkpointer = ModelCheckpoint(filepath="./tmp/weights.hdf5", verbose=1, save_best_only=True)
+                    tensorboard = TensorBoard(log_dir="./logs", histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None, update_freq='epoch')
+                    
+                    classifier.fit_generator(training_set, steps_per_epoch, epochs, callbacks=[checkpointer, tensorboard], validation_data = test_set, validation_steps = validation_steps)
                     print("Training complete.")
                     rawModel = False
                 elif user_input.casefold() == "n" or user_input.casefold() == "no":
