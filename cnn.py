@@ -360,8 +360,8 @@ while 1==1:
                     classifier.save(save_file)
                     print("Save complete.")
                 except Exception as ex:
-                    print("Save failed!")
                     traceback.print_exc()
+                    print("Save failed! Please make sure that you are able to save a file here.")
         if user_input == "!load":
             load_file = ""
             if list_uinput.__len__() > 1:
@@ -377,8 +377,8 @@ while 1==1:
                 rawModel = False
                 print("Load complete.")
             except Exception as ex:
-                print("Load failed!")
                 traceback.print_exc()
+                print("Load failed! Please make sure that the filename is correct.")
         if user_input == "!reset":
             print("Are you sure you want to delete the existing model? (y/n)")
             print(">", end="")
@@ -454,7 +454,7 @@ while 1==1:
             negatives = 0
             filecount = list(Path('.').glob("internal/test_set/*/*.jpg")).__len__()
             if filecount == 0:
-                print("No test images found." 
+                print("No test images found.") 
                 print("Recommended: add images into bucket/abnormal/ and bucket/normal/ then use !addimages")
             globlist = Path('.').glob("internal/test_set/abnormal/*.jpg")
             for ginput in globlist:
