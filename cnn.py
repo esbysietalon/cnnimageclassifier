@@ -18,6 +18,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from pathlib import Path
 from random import SystemRandom
 import os
+import traceback
 
 tutorial = []
 tutorial.append("""Getting Started.
@@ -112,7 +113,7 @@ def printTutorial(page):
         print("1 - Using the Classifier")
 def printIntro():
     print("===========================================")
-    print("       CNN IMAGE CLASSIFIER v0.2.7")
+    print("       CNN IMAGE CLASSIFIER v0.2.8")
     print("===========================================")
 def openListFiles():
     normalList = open("results/normallist.txt", "w+")
@@ -151,7 +152,49 @@ def portionBucket():
     else:
         print("No abnormal images found.")
     print("Images portioned.")
+     
 
+def configureTraining(variable, currval):
+    if variable.casefold() == "steps_per_epoch":
+        input_steps = 0
+        while(input_steps < 1):
+            print("Please input desired number of steps (default: 8000, current: " + str(currval) + "):")
+            print(">", end="")
+            try:
+                input_steps = int(input())
+            except Exception as ex:
+                traceback.print_exc()
+                print("Configure failed, using default value")
+                input_steps = 8000
+        return input_steps
+    if variable.casefold() == "epochs":       
+        input_epochs = 0
+        while(input_epochs < 1):
+            print("Please input desired number of epochs (default: 25, current: " + str(currval) + "):")
+            print(">", end="")
+            try:
+                input_epochs = int(input())
+            except Exception as ex:
+                traceback.print_exc()
+                print("Configure failed, using default value")
+                input_epochs = 25
+        return input_epochs
+    if variable.casefold() == "validation_steps":
+        input_validation_steps = 0;
+        while(input_validation_steps < 1):
+            print("Please input desired number of validation steps (default: 2000, current: " + str(currval) + "):")
+            print(">", end="")
+            try:
+                input_validation_steps = int(input())
+            except Exception as ex:
+                traceback.print_exc()
+                print("Configure failed, using default value")
+                input_validation_steps = 2000
+        return input_validation_steps
+    print("Variable not found. Available variables to configure are:")
+    print("steps_per_epoch - this determines the steps per epoch (default: 8000)")
+    print("epochs - this determines the number of epochs/generations (default: 25)")
+    print("validation_steps - this determines the steps to validate at the end of each epoch (default: 2000)")
 
 
 portionBucket()
@@ -172,16 +215,17 @@ training_set = train_datagen.flow_from_directory('internal/training_set', target
 test_set = test_datagen.flow_from_directory('internal/test_set', target_size = (64, 64), batch_size = 32, class_mode = 'binary')
 
 
+
 steps_per_epoch = 8000
 epochs = 25
-validation_steps = 2000
-
+validation_steps = 2000    
 rawModel = True
+classify = False
 
 import numpy as np
 from keras.preprocessing import image
 
-classify = False
+
 
 openListFiles()
 
@@ -193,7 +237,6 @@ for i in range(0, tutorial.__len__()):
         tutfile = open("tutorial/tutorial"+str(i)+".txt", "w+")
         tutfile.write(tutorial[i])
         tutfile.close()
-
 
 printIntro()
 printHelp()
@@ -259,7 +302,7 @@ while 1==1:
                         abnormalFiles.append(ginput)
                         abnormalCount += 1
                     print("["+str(currcount) + "/" + str(filecount) + "] " + prediction)
-                except:
+                except Exception as ex:
                     print("["+str(currcount) + "/" + str(filecount) + "] " + ginput + ": error encountered. Invalid file chosen.")
         normalList = open("results/normallist.txt", "a")
         for file in normalFiles:
@@ -278,7 +321,7 @@ while 1==1:
                 try:
                     page = int(list_uinput[1])
                     printTutorial(page)
-                except:
+                except Exception as ex:
                     print("Use /'!tutorial #/' to access a specific page of the tutorial (where # is the page you want to access).")
             else:
                 printTutorial(-1)
@@ -316,8 +359,9 @@ while 1==1:
                 try:
                     classifier.save(save_file)
                     print("Save complete.")
-                except:
-                    print("Save failed - bad filename")
+                except Exception as ex:
+                    print("Save failed!")
+                    traceback.print_exc()
         if user_input == "!load":
             load_file = ""
             if list_uinput.__len__() > 1:
@@ -332,8 +376,9 @@ while 1==1:
                 classifier = load_model(load_file)
                 rawModel = False
                 print("Load complete.")
-            except:
-                print("Load failed - bad filename")
+            except Exception as ex:
+                print("Load failed!")
+                traceback.print_exc()
         if user_input == "!reset":
             print("Are you sure you want to delete the existing model? (y/n)")
             print(">", end="")
@@ -351,53 +396,31 @@ while 1==1:
             else:
                 print("Reset aborted.")
         if user_input == "!configure":
-            input_steps = 0
-            while(input_steps < 1):
-                print("Please input desired number of steps (default: 8000, current: " + str(steps_per_epoch) + "):")
-                print(">", end="")
-                try:
-                    input_steps = int(input())
-                except:
-                    print("Invalid input entered, using default value")
-                    input_steps = 8000
-            steps_per_epoch = input_steps
-            
-            input_epochs = 0
-            while(input_epochs < 1):
-                print("Please input desired number of epochs (default: 25, current: " + str(epochs) + "):")
-                print(">", end="")
-                try:
-                    input_epochs = int(input())
-                except:
-                    print("Invalid input entered, using default value")
-                    input_epochs = 25
-            epochs = input_epochs
-
-            input_validation_steps = 0;
-            while(input_validation_steps < 1):
-                print("Please input desired number of validation steps (default: 2000, current: " + str(validation_steps) + "):")
-                print(">", end="")
-                try:
-                    input_validation_steps = int(input())
-                except:
-                    print("Invalid input entered, using default value")
-                    input_validation_steps = 2000
-            validation_steps = input_validation_steps
-            print("Configuration successful.")
+            steps_per_epoch = configureTraining("steps_per_epoch", steps_per_epoch)
+            epochs = configureTraining("epochs", epochs)
+            validation_steps = configureTraining("validation_steps", validation_steps)
         if user_input == "!train":
-            print("Current configuration settings:")
-            print("Steps per epoch: " + str(steps_per_epoch))
-            print("Epochs: " + str(epochs))
-            print("Validation steps: " + str(validation_steps))
-            print("Is this okay? (y/n)")
-            print(">", end="")
-            user_input = str(input()).split()[0]
-            if user_input.casefold() == "y" or user_input.casefold() == "yes":
-                classifier.fit_generator(training_set, steps_per_epoch, epochs, validation_data = test_set, validation_steps = validation_steps)
-                print("Training complete.")
-                rawModel = False
-            else:
-                print("Training aborted.")
+            confirmSettings = False
+            while not confirmSettings:
+                print("Current configuration settings:")
+                print("Steps per epoch: " + str(steps_per_epoch))
+                print("Epochs: " + str(epochs))
+                print("Validation steps: " + str(validation_steps))
+                print("Is this okay? (y/n/cancel)")
+                print(">", end="")
+                user_input = str(input()).split()[0]
+                if user_input.casefold() == "y" or user_input.casefold() == "yes":
+                    confirmSettings = True
+                    classifier.fit_generator(training_set, steps_per_epoch, epochs, validation_data = test_set, validation_steps = validation_steps)
+                    print("Training complete.")
+                    rawModel = False
+                elif user_input.casefold() == "n" or user_input.casefold() == "no":
+                    steps_per_epoch = configureTraining("steps_per_epoch", steps_per_epoch)
+                    epochs = configureTraining("epochs", epochs)
+                    validation_steps = configureTraining("validation_steps", validation_steps)
+                else:
+                    print("Training aborted.")
+                    break
         if user_input == "!classify":
             forceClassify = False
             if rawModel:
@@ -438,7 +461,7 @@ while 1==1:
                         prediction = ginput + ': ABNORMAL ' + '(' + str(result[0][0]) + ')'
                         correct_total += 1
                     print("["+str(currcount) + "/" + str(filecount) + "] " + prediction)
-                except:
+                except Exception as ex:
                     print("["+str(currcount) + "/" + str(filecount) + "] " + ginput + ": error encountered. Invalid file chosen.")
             globlist = Path('.').glob("internal/test_set/normal/*.jpg")
             for ginput in globlist:
@@ -458,7 +481,7 @@ while 1==1:
                         prediction = ginput + ': ABNORMAL ' + '(' + str(result[0][0]) + ')'
                         false_positives += 1
                     print("["+str(currcount) + "/" + str(filecount) + "] " + prediction)
-                except:
+                except Exception as ex:
                     print("["+str(currcount) + "/" + str(filecount) + "] " + ginput + ": error encountered. Invalid file chosen.")
             print("Findings..")
             print("Total Accuracy: " + str(float(correct_total)/float(currcount)) + " (" + str(correct_total) + "/" + str(currcount) + ")")
