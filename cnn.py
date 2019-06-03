@@ -291,6 +291,11 @@ while 1==1:
                 print("Did not clear lists.")
         if user_input == "!save":
             forceSave = False
+            save_file = ""
+            if list_uinput.__len__() > 1:
+                save_file = list_uinput[1]
+            else:
+                save_file = ""
             if rawModel:
                 print("Warning: Model is untrained. Are you sure you want to save it anyway? (y/n)")
                 print(">", end="")
@@ -300,16 +305,23 @@ while 1==1:
             if rawModel and not forceSave:
                 print("Save aborted.")
             if not rawModel or forceSave:
-                print("What should the file be called?")
-                save_file = str(input()).split()[0]
+                if save_file == "":
+                    print("What should the file be called?")
+                    save_file = str(input()).split()[0]
                 try:
                     classifier.save(save_file)
                     print("Save complete.")
                 except:
                     print("Save failed - bad filename")
         if user_input == "!load":
-            print("What file should the model be loaded from? (must be a .h5 file)")
-            load_file = str(input()).split()[0]
+            load_file = ""
+            if list_uinput.__len__() > 1:
+                load_file = list_uinput[1]
+            else:
+                load_file = ""
+            if load_file == "":
+                print("What file should the model be loaded from? (must be a .h5 file)")
+                load_file = str(input()).split()[0]
             try:
                 classifier = load_model(load_file)
                 rawModel = False
