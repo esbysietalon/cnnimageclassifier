@@ -286,6 +286,7 @@ while 1==1:
             printHelp()
         if user_input == "!clear":
             print("Are you sure you want to clear the lists of normal/abnormal images? (y/n)")
+            print(">", end="")
             user_input = str(input()).split()[0]
             if user_input.casefold() == "y" or user_input.casefold() == "yes":
                 openListFiles()
@@ -310,6 +311,7 @@ while 1==1:
             if not rawModel or forceSave:
                 if save_file == "":
                     print("What should the file be called?")
+                    print(">", end="")
                     save_file = str(input()).split()[0]
                 try:
                     classifier.save(save_file)
@@ -324,6 +326,7 @@ while 1==1:
                 load_file = ""
             if load_file == "":
                 print("What file should the model be loaded from? (must be a .h5 file)")
+                print(">", end="")
                 load_file = str(input()).split()[0]
             try:
                 classifier = load_model(load_file)
@@ -351,6 +354,7 @@ while 1==1:
             input_steps = 0
             while(input_steps < 1):
                 print("Please input desired number of steps (default: 8000, current: " + str(steps_per_epoch) + "):")
+                print(">", end="")
                 try:
                     input_steps = int(input())
                 except:
@@ -361,6 +365,7 @@ while 1==1:
             input_epochs = 0
             while(input_epochs < 1):
                 print("Please input desired number of epochs (default: 25, current: " + str(epochs) + "):")
+                print(">", end="")
                 try:
                     input_epochs = int(input())
                 except:
@@ -371,6 +376,7 @@ while 1==1:
             input_validation_steps = 0;
             while(input_validation_steps < 1):
                 print("Please input desired number of validation steps (default: 2000, current: " + str(validation_steps) + "):")
+                print(">", end="")
                 try:
                     input_validation_steps = int(input())
                 except:
@@ -379,9 +385,19 @@ while 1==1:
             validation_steps = input_validation_steps
             print("Configuration successful.")
         if user_input == "!train":
-            classifier.fit_generator(training_set, steps_per_epoch, epochs, validation_data = test_set, validation_steps = validation_steps)
-            print("Training complete.")
-            rawModel = False
+            print("Current configuration settings:")
+            print("Steps per epoch: " + str(steps_per_epoch))
+            print("Epochs: " + str(epochs))
+            print("Validation steps: " + str(validation_steps))
+            print("Is this okay? (y/n)")
+            print(">", end="")
+            user_input = str(input()).split()[0]
+            if user_input.casefold() == "y" or user_input.casefold() == "yes":
+                classifier.fit_generator(training_set, steps_per_epoch, epochs, validation_data = test_set, validation_steps = validation_steps)
+                print("Training complete.")
+                rawModel = False
+            else:
+                print("Training aborted.")
         if user_input == "!classify":
             forceClassify = False
             if rawModel:
