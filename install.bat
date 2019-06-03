@@ -2,6 +2,7 @@ pip install Keras
 pip install Theano
 pip install tensorflow
 pip install pathlib
+
 mkdir results
 mkdir internal
 cd internal
@@ -21,3 +22,7 @@ cd bucket
 mkdir abnormal
 mkdir normal
 cd ..
+
+echo @echo off >> start.bat
+echo TITLE CNN IMAGE CLASSIFIER v0.2.7 >> start.bat
+echo python cnn.py >> start.bat
