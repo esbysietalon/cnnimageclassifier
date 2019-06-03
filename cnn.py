@@ -396,9 +396,19 @@ while 1==1:
             else:
                 print("Reset aborted.")
         if user_input == "!configure":
-            steps_per_epoch = configureTraining("steps_per_epoch", steps_per_epoch)
-            epochs = configureTraining("epochs", epochs)
-            validation_steps = configureTraining("validation_steps", validation_steps)
+            if list_uinput.__len__() > 1:
+                if list_uinput[1] == "steps_per_epoch":
+                    steps_per_epoch = configureTraining("steps_per_epoch", steps_per_epoch)
+                elif list_uinput[1] == "epochs":
+                    epochs = configureTraining("epochs", epochs)
+                elif list_uinput[1] == "validation_steps":
+                    validation_steps = configureTraining("validation_steps", validation_steps)
+                else:
+                    configureTraining(list_uinput[1], -1)
+            else:
+                steps_per_epoch = configureTraining("steps_per_epoch", steps_per_epoch)
+                epochs = configureTraining("epochs", epochs)
+                validation_steps = configureTraining("validation_steps", validation_steps)
         if user_input == "!train":
             confirmSettings = False
             while not confirmSettings:
@@ -443,6 +453,9 @@ while 1==1:
             false_positives = 0
             negatives = 0
             filecount = list(Path('.').glob("internal/test_set/*/*.jpg")).__len__()
+            if filecount == 0:
+                print("No test images found." 
+                print("Recommended: add images into bucket/abnormal/ and bucket/normal/ then use !addimages")
             globlist = Path('.').glob("internal/test_set/abnormal/*.jpg")
             for ginput in globlist:
                 ginput = str(ginput)
@@ -483,13 +496,16 @@ while 1==1:
                     print("["+str(currcount) + "/" + str(filecount) + "] " + prediction)
                 except Exception as ex:
                     print("["+str(currcount) + "/" + str(filecount) + "] " + ginput + ": error encountered. Invalid file chosen.")
-            print("Findings..")
-            print("Total Accuracy: " + str(float(correct_total)/float(currcount)) + " (" + str(correct_total) + "/" + str(currcount) + ")")
-            print("False Positives (Normal images classified as Abnormal): " + str(float(false_positives) / float(negatives)) + " (" + str(false_positives) + "/" + str(negatives) + ")")
-            print("False Negatives (Abnormal images classified as Normal): " + str(float(false_negatives) / float(positives)) + " (" + str(false_negatives) + "/" + str(positives) + ")")
-            print("Conclusion:")
-            if float(correct_total)/float(currcount) < 0.95:
-                print("Requires more training! Try using larger configuration numbers.")
-            else:
-                print("May be used for classification, keeping in mind error margins.")
+            if currcount > 0:
+                print("Findings..")
+                print("Total Accuracy: " + str(float(correct_total)/float(currcount)) + " (" + str(correct_total) + "/" + str(currcount) + ")")
+                if negatives > 0:
+                    print("False Positives (Normal images classified as Abnormal): " + str(float(false_positives) / float(negatives)) + " (" + str(false_positives) + "/" + str(negatives) + ")")
+                if positives > 0:
+                    print("False Negatives (Abnormal images classified as Normal): " + str(float(false_negatives) / float(positives)) + " (" + str(false_negatives) + "/" + str(positives) + ")")
+                print("Conclusion:")
+                if float(correct_total)/float(currcount) < 0.95:
+                    print("Requires more training! Try using larger configuration numbers.")
+                else:
+                    print("May be used for classification, keeping in mind error margins.")
     print(" ")
