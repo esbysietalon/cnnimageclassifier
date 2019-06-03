@@ -95,6 +95,7 @@ def printHelp():
     print("!clear - clears the lists of normal/abnormal images")
     print("!help - displays a list of commands")
     print("!classify - switches to classifying mode")
+    print("!addimages - adds images from bucket, portioned between test and training sets")
     print("!checkmodel - checks accuracy of model on images in test_set/")
     print("!exit - exits classifying mode or program")
     print("!configure - configures training")
@@ -270,6 +271,8 @@ while 1==1:
         abnormalList.close()
         print(str(normalCount) + " normal images found. " + str(abnormalCount) + " abnormal images found. See abnormallist.txt and normallist.txt in the results/ folder for lists of normal and abnormal images respectively.")
     else:
+        if user_input == "!addimages":
+            portionBucket()
         if user_input == "!tutorial":
             if list_uinput.__len__() > 1:
                 try:
