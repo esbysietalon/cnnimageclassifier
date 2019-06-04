@@ -94,6 +94,7 @@ def printHelp():
     print("-------------------------------------------")
     print("!tutorial - use this command if you're lost")
     print("!load - loads a model from a .h5 file")
+    print("!loadweights - loads model weights from a .h5 or .hdf5 file")
     print("!save - saves a model as a .h5 file")
     print("!reset - deletes the existing model")
     print("!clear - clears the lists of normal/abnormal images")
@@ -247,7 +248,7 @@ print(" ")
         
 while 1==1:
     if rawModel:
-        print("Model is untrained. Recommended: !load or !configure then !train")
+        print("Model is untrained. Recommended: !load or !train")
     if classify:
         print("Enter the filepath/s to the image (!exit to exit classifying mode):")
     else:
@@ -268,6 +269,7 @@ while 1==1:
             break
     if classify:
         if user_input.startswith('!'):
+            print(" ")
             print("Use !exit to exit classifier mode.")
         print(" ")
         print("Found the following files to classify:")
@@ -306,6 +308,7 @@ while 1==1:
                         abnormalCount += 1
                     print("["+str(currcount) + "/" + str(filecount) + "] " + prediction)
                 except Exception as ex:
+                    traceback.print_exc()
                     print("["+str(currcount) + "/" + str(filecount) + "] " + ginput + ": error encountered. Invalid file chosen.")
         normalList = open("results/normallist.txt", "a")
         for file in normalFiles:
@@ -331,6 +334,7 @@ while 1==1:
         if user_input == "!help":
             printHelp()
         if user_input == "!clear":
+            print(" ")
             print("Are you sure you want to clear the lists of normal/abnormal images? (y/n)")
             print(">", end="")
             user_input = str(input()).split()[0]
@@ -347,6 +351,7 @@ while 1==1:
             else:
                 save_file = ""
             if rawModel:
+                print(" ")
                 print("Warning: Model is untrained. Are you sure you want to save it anyway? (y/n)")
                 print(">", end="")
                 user_input = str(input()).split()[0]
@@ -356,6 +361,7 @@ while 1==1:
                 print("Save aborted.")
             if not rawModel or forceSave:
                 if save_file == "":
+                    print(" ")
                     print("What should the file be called?")
                     print(">", end="")
                     save_file = str(input()).split()[0]
@@ -369,7 +375,8 @@ while 1==1:
             forceLoad = False
             load_file = ""
             if not rawModel:
-                print("Warning: Model is untrained. Are you sure you want to save it anyway? (y/n)")
+                print(" ")
+                print("Warning: Loading another model will discard the current model entirely. Proceed? (y/n)")
                 print(">", end="")
                 user_input = str(input()).split()[0]
                 if user_input.casefold() == "y" or user_input.casefold() == "yes":
@@ -380,7 +387,17 @@ while 1==1:
                 else:
                     load_file = ""
                 if load_file == "":
-                    print("What file should the model be loaded from? (must be a .h5 file)")
+                    print(" ")
+                    print("What file should the model be loaded from?")
+                    print(" ")
+                    print("Suggested files:")
+                    validfiles = Path('.').glob("**/*.h5")
+                    for s in validfiles:
+                        print(s)
+                    validfiles = Path('.').glob("**/*.hdf5")
+                    for s in validfiles:
+                        print(s)
+                    print(" ")
                     print(">", end="")
                     load_file = str(input()).split()[0]
                 try:
@@ -392,7 +409,53 @@ while 1==1:
                     print("Load failed! Please make sure that the filename is correct.")
             else:
                 print("Load aborted.")
+        if user_input == "!loadweights":
+            forceLoad = False
+            load_file = ""
+            if not rawModel:
+                print(" ")
+                print("Warning: Loading weights will discard the current weights. Proceed? (y/n)")
+                print(">", end="")
+                user_input = str(input()).split()[0]
+                if user_input.casefold() == "y" or user_input.casefold() == "yes":
+                    forceLoad = True
+            #else:
+            #    print(" ")
+            #    print("Warning: Loading weights without training the model first is not recommended. Proceed? (y/n)")
+            #    print(">", end="")
+            #    user_input = str(input()).split()[0]
+            #    if user_input.casefold() == "y" or user_input.casefold() == "yes":
+            #        forceLoad = True
+            if rawModel or forceLoad:
+                if list_uinput.__len__() > 1:
+                    load_file = list_uinput[1]
+                else:
+                    load_file = ""
+                if load_file == "":
+                    print(" ")
+                    print("What file should the weights be loaded from?")
+                    print(" ")
+                    print("Suggested files:")
+                    validfiles = Path('.').glob("**/*.h5")
+                    for s in validfiles:
+                        print(s)
+                    validfiles = Path('.').glob("**/*.hdf5")
+                    for s in validfiles:
+                        print(s)
+                    print(" ")
+                    print(">", end="")
+                    load_file = str(input()).split()[0]
+                try:
+                    classifier = classifier.load_weights(load_file)
+                    rawModel = False
+                    print("Load complete.")
+                except Exception as ex:
+                    traceback.print_exc()
+                    print("Load failed! Please make sure that the filename is correct.")
+            else:
+                print("Load aborted.")
         if user_input == "!reset":
+            print(" ")
             print("Are you sure you want to delete the existing model? (y/n)")
             print(">", end="")
             user_input = str(input()).split()[0]
@@ -425,6 +488,7 @@ while 1==1:
         if user_input == "!train":
             confirmSettings = False
             while not confirmSettings:
+                print(" ")
                 print("Current configuration settings:")
                 print("Steps per epoch: " + str(steps_per_epoch))
                 print("Epochs: " + str(epochs))
@@ -455,6 +519,7 @@ while 1==1:
         if user_input == "!classify":
             forceClassify = False
             if rawModel:
+                print(" ")
                 print("Warning: Model is untrained. Are you sure you want to enter classifying mode anyway? (y/n)")
                 print(">", end="")
                 user_input = str(input()).split()[0]
@@ -466,6 +531,7 @@ while 1==1:
                 classify = True
                 print("Entered classifying mode.")
         if user_input == "!checkmodel":
+            print(" ")
             print("Checking model on test_set..")
             currcount = 0
             correct_total = 0
@@ -516,8 +582,10 @@ while 1==1:
                         false_positives += 1
                     print("["+str(currcount) + "/" + str(filecount) + "] " + prediction)
                 except Exception as ex:
+                    traceback.print_exc()
                     print("["+str(currcount) + "/" + str(filecount) + "] " + ginput + ": error encountered. Invalid file chosen.")
             if currcount > 0:
+                print(" ")
                 print("Findings..")
                 print("Total Accuracy: " + str(float(correct_total)/float(currcount)) + " (" + str(correct_total) + "/" + str(currcount) + ")")
                 if negatives > 0:
