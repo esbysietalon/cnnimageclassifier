@@ -9,6 +9,8 @@ pip install pathlib
 mkdir results >nul 2>&1
 mkdir internal >nul 2>&1
 cd internal
+mkdir tmp >nul 2>&1
+mkdir logs >nul 2>&1
 mkdir test_set >nul 2>&1
 cd test_set
 mkdir normal >nul 2>&1
@@ -28,6 +30,6 @@ cd ..
 @echo Creating start.bat..
 del start.bat >nul 2>&1
 @echo @echo off >> start.bat
-@echo TITLE CNN IMAGE CLASSIFIER v0.2.7 >> start.bat
+@echo TITLE CNN IMAGE CLASSIFIER v0.2.9 >> start.bat
 @echo python cnn.py >> start.bat
 @echo Installation complete.
