@@ -119,7 +119,7 @@ def printHelp():
     print("!loadweights - loads model weights from a .h5 or .hdf5 file")
     print("!save - saves a model as a .h5 file")
     print("!reset - deletes the existing model")
-    print("!clear - clears the lists of normal/abnormal images")
+    print("!clearlists - clears the lists of normal/abnormal images")
     print("!help - displays a list of commands")
     print("!classify - switches to classifying mode")
     print("!addimages - adds images from bucket, portioned between test and training sets")
@@ -288,7 +288,12 @@ while 1==1:
             classify = False
             print("Exited classifying mode.")
         else:
-            break
+            print(" ")
+            print("Warning: All unsaved models will be lost. Proceed? (y/n)")
+            print(">", end="")
+            user_input = str(input()).split()[0]
+            if user_input.casefold() == "y" or user_input.casefold() == "yes":
+                break
     if classify:
         if user_input.startswith('!'):
             print(" ")
@@ -355,7 +360,7 @@ while 1==1:
                 printTutorial(-1)
         if user_input == "!help":
             printHelp()
-        if user_input == "!clear":
+        if user_input == "!clearlists":
             print(" ")
             print("Are you sure you want to clear the lists of normal/abnormal images? (y/n)")
             print(">", end="")
