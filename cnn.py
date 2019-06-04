@@ -424,7 +424,7 @@ while 1==1:
                 user_input = str(input()).split()[0]
                 if user_input.casefold() == "y" or user_input.casefold() == "yes":
                     confirmSettings = True
-                    run = "".join(str(datetime.datetime.now()).split())
+                    run = "".join(("".join(("".join(str(datetime.datetime.now()).split())).split(':'))).split('.'))
                     checkpointer = ModelCheckpoint(filepath="./internal/tmp/checkpoints/weights" + run + ".hdf5", verbose=1, save_best_only=True)
 
                     tblogs = Path('.').glob("internal/tmp/tensorboard/*")
