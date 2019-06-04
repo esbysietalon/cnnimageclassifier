@@ -22,6 +22,28 @@ from random import SystemRandom
 import os
 import traceback
 import datetime
+import sys
+
+logname = 'internal/logs/' + str(''.join(str(datetime.datetime.now().time()).split(':'))) + '.log'
+logfile = open(logname,'w')  # File where you need to keep the logs
+
+class Unbuffered:
+
+    def __init__(self, stream):
+
+        self.stream = stream
+
+    def write(self, data):
+
+        self.stream.write(data)
+        self.stream.flush()
+        logfile.write(data)    # Write the data of stdout here to a text file as well
+
+    def flush(self):
+        #for compatibility with python 3
+        pass
+
+sys.stdout=Unbuffered(sys.stdout)
 
 tutorial = []
 tutorial.append("""Getting Started.
@@ -117,7 +139,7 @@ def printTutorial(page):
         print("1 - Using the Classifier")
 def printIntro():
     print("===========================================")
-    print("       CNN IMAGE CLASSIFIER v0.2.9")
+    print("       CNN IMAGE CLASSIFIER v0.2.10")
     print("===========================================")
 def openListFiles():
     normalList = open("results/normallist.txt", "w+")
