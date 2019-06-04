@@ -64,10 +64,8 @@ This page is 'tutorial0.txt'.
 \n
     (Your numbers will differ)
 \n
-    Take special notice of the value in front of 'acc:', in this case 0.9845. This is the accuracy of the model.
     Training increases the accuracy of the model slowly, the more time you give it, the more accurate it will become.
-    Until accuracy is very high (0.999+), the model can be very unreliable when classifying similar images.
-    This can take dozens of hours worth of training depending on how fast this machine is (25+).
+    Getting high accuracy can take dozens of hours worth of training depending on how fast this machine is.
     However, this training time can be split up over multiple sessions as you will see.
 4.  After training is complete, enter '!save', then select a filename to save the model to (ex: 'model01.h5')
     This is what allows us to split up hours and hours of training time over manageable sessions.
@@ -77,7 +75,7 @@ This page is 'tutorial0.txt'.
     it starts with an untrained model. We can fix this by entering '!load', then entering the filename that you
     chose earlier (ex: 'model01.h5').
 7.  Now we can either continue training (recommended) or start classifying images. I recommend that you repeat steps 8-11
-    until the model has an accuracy of at least 0.999.
+    until !checkmodel indicates that the model has high accuracy (0.95+).
 8.  Enter '!load', then enter the filename of the model you're currently training. In this tutorial that was 'model01.h5'
 9.  Enter '!configure' and select values that you think are reasonable
     (I recommend you numbers in the range of steps_per_epoch = 8000, 2 < epochs < 5,
@@ -92,8 +90,6 @@ This page is 'tutorial0.txt'.
 tutorial.append("""Using the Classifier
 You can view this and other tutorial pages by navigating to where cnn.py is and navigating to the tutorial folder.
 This page is 'tutorial1.txt'.
-Please do not continue if the model you currently have does not have an accuracy of at least 0.999.
-You can verify the accuracy of the model by loading it then training it briefly to look at the value of 'acc:'.
 The following instructions will walk you through how to use the classifier to classify images.
 \n
 1.   Switch to classifier mode by entering '!classify'. You cannot use any other commands (!help, !load, !train, etc)
@@ -108,7 +104,9 @@ The following instructions will walk you through how to use the classifier to cl
      'thirdtest.jpg' by entering '*test.jpg').
 6.   You can also classify all .jpg files in a folder by entering 'foldername/*.jpg' (ex: to classify all .jpg files
      in the folder 'xrays', enter 'xrays/*.jpg').
-7.   Note that the lists of abnormal and normal images can be found in the results/ folder.
+7.   You can also classify every .jpg file in every folder and subfolder in the current directory by entering
+     '**/*.jpg'.
+8.   Note that the lists of abnormal and normal images can be found in the results/ folder.
 """)
 
 def printHelp():
