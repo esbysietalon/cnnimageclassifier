@@ -366,22 +366,32 @@ while 1==1:
                     traceback.print_exc()
                     print("Save failed! Please make sure that you are able to save a file here.")
         if user_input == "!load":
+            forceLoad = False
             load_file = ""
-            if list_uinput.__len__() > 1:
-                load_file = list_uinput[1]
-            else:
-                load_file = ""
-            if load_file == "":
-                print("What file should the model be loaded from? (must be a .h5 file)")
+            if not rawModel:
+                print("Warning: Model is untrained. Are you sure you want to save it anyway? (y/n)")
                 print(">", end="")
-                load_file = str(input()).split()[0]
-            try:
-                classifier = load_model(load_file)
-                rawModel = False
-                print("Load complete.")
-            except Exception as ex:
-                traceback.print_exc()
-                print("Load failed! Please make sure that the filename is correct.")
+                user_input = str(input()).split()[0]
+                if user_input.casefold() == "y" or user_input.casefold() == "yes":
+                    forceLoad = True
+            if rawModel or forceLoad:
+                if list_uinput.__len__() > 1:
+                    load_file = list_uinput[1]
+                else:
+                    load_file = ""
+                if load_file == "":
+                    print("What file should the model be loaded from? (must be a .h5 file)")
+                    print(">", end="")
+                    load_file = str(input()).split()[0]
+                try:
+                    classifier = load_model(load_file)
+                    rawModel = False
+                    print("Load complete.")
+                except Exception as ex:
+                    traceback.print_exc()
+                    print("Load failed! Please make sure that the filename is correct.")
+            else:
+                print("Load aborted.")
         if user_input == "!reset":
             print("Are you sure you want to delete the existing model? (y/n)")
             print(">", end="")
