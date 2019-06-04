@@ -21,6 +21,7 @@ from pathlib import Path
 from random import SystemRandom
 import os
 import traceback
+import datetime
 
 tutorial = []
 tutorial.append("""Getting Started.
@@ -423,9 +424,13 @@ while 1==1:
                 user_input = str(input()).split()[0]
                 if user_input.casefold() == "y" or user_input.casefold() == "yes":
                     confirmSettings = True
-                    
-                    checkpointer = ModelCheckpoint(filepath="./tmp/weights.hdf5", verbose=1, save_best_only=True)
-                    tensorboard = TensorBoard(log_dir="./logs", histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None, update_freq='epoch')
+                    run = "".join(str(datetime.datetime.now()).split())
+                    checkpointer = ModelCheckpoint(filepath="./internal/tmp/checkpoints/weights" + run + ".hdf5", verbose=1, save_best_only=True)
+
+                    tblogs = Path('.').glob("internal/tmp/tensorboard/*")
+                    for s in tblogs:
+                        os.remove(s)
+                    tensorboard = TensorBoard(log_dir="./internal/tmp/tensorboard/", histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None, update_freq='epoch')
                     
                     classifier.fit_generator(training_set, steps_per_epoch, epochs, callbacks=[checkpointer, tensorboard], validation_data = test_set, validation_steps = validation_steps)
                     print("Training complete.")

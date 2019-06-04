@@ -10,7 +10,10 @@ mkdir results >nul 2>&1
 mkdir internal >nul 2>&1
 cd internal
 mkdir tmp >nul 2>&1
-mkdir logs >nul 2>&1
+cd tmp
+mkdir checkpoints >nul 2>&1
+mkdir tensorboard >nul 2>&1
+cd ..
 mkdir test_set >nul 2>&1
 cd test_set
 mkdir normal >nul 2>&1
