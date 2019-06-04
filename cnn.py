@@ -121,6 +121,7 @@ def printHelp():
     print("!help - displays a list of commands")
     print("!classify - switches to classifying mode")
     print("!addimages - adds images from bucket, portioned between test and training sets")
+    print("!shuffleimages - shuffles images used in training and test sets")
     print("!checkmodel - checks accuracy of model on images in test_set/")
     print("!exit - exits classifying mode or program")
     print("!configure - configures training")
@@ -144,6 +145,34 @@ def openListFiles():
     normalList.close()
     abnormalList = open("results/abnormallist.txt", "w+")
     abnormalList.close()
+def fillBucket():
+    cryptorand = SystemRandom()
+    print("Putting images into bucket..")
+    if len(os.listdir("internal/training_set/normal")) > 0:
+        print("Taking normal images..")
+        transferlist = list(Path('.').glob("internal/training_set/normal/*.jpg"))
+        cryptorand.shuffle(transferlist)
+        for s in transferlist:
+            os.rename(s,"bucket/normal/"+str(s)[29:])
+        transferlist = list(Path('.').glob("internal/test_set/normal/*.jpg"))
+        cryptorand.shuffle(transferlist)
+        for s in transferlist:
+            os.rename(s,"bucket/normal/"+str(s)[25:])
+    else:
+        print("No normal images found.")
+    if len(os.listdir("internal/training_set/abnormal")) > 0:
+        print("Taking abnormal images..")
+        transferlist = list(Path('.').glob("internal/training_set/abnormal/*.jpg"))
+        cryptorand.shuffle(transferlist)
+        for s in transferlist:
+            os.rename(s,"bucket/abnormal/"+str(s)[31:])
+        transferlist = list(Path('.').glob("internal/test_set/abnormal/*.jpg"))
+        cryptorand.shuffle(transferlist)
+        for s in transferlist:
+            os.rename(s,"bucket/abnormal/"+str(s)[27:])
+    else:
+        print("No abnormal images found.")
+    print("Images moved to bucket.")
 def portionBucket():
     cryptorand = SystemRandom()
     print("Portioning images from bucket..")
@@ -345,6 +374,9 @@ while 1==1:
         abnormalList.close()
         print(str(normalCount) + " normal images found. " + str(abnormalCount) + " abnormal images found. See abnormallist.txt and normallist.txt in the results/ folder for lists of normal and abnormal images respectively.")
     else:
+        if user_input == "!shuffleimages":
+            fillBucket()
+            portionBucket()
         if user_input == "!addimages":
             portionBucket()
         if user_input == "!tutorial":
