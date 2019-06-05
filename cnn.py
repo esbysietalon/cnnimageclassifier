@@ -503,7 +503,7 @@ while 1==1:
                     print(">", end="")
                     load_file = str(input()).split()[0]
                 try:
-                    classifier = classifier.load_weights(load_file)
+                    classifier.load_weights(load_file)
                     rawModel = False
                     print("Load complete.")
                 except Exception as ex:
