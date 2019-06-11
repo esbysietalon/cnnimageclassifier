@@ -138,7 +138,7 @@ def printTutorial(page):
         print("1 - Using the Classifier")
 def printIntro():
     print("===========================================")
-    print("       CNN IMAGE CLASSIFIER v0.2.10")
+    print("       CNN IMAGE CLASSIFIER v0.2.11")
     print("===========================================")
 def openListFiles():
     normalList = open("results/normallist.txt", "w+")
@@ -153,11 +153,11 @@ def fillBucket():
         transferlist = list(Path('.').glob("internal/training_set/normal/*.jpg"))
         cryptorand.shuffle(transferlist)
         for s in transferlist:
-            os.rename(s,"bucket/normal/"+str(s)[29:])
+            os.rename(s,"PLACE_IMAGES_HERE/normal/"+str(s)[29:])
         transferlist = list(Path('.').glob("internal/test_set/normal/*.jpg"))
         cryptorand.shuffle(transferlist)
         for s in transferlist:
-            os.rename(s,"bucket/normal/"+str(s)[25:])
+            os.rename(s,"PLACE_IMAGES_HERE/normal/"+str(s)[25:])
     else:
         print("No normal images found.")
     if len(os.listdir("internal/training_set/abnormal")) > 0:
@@ -165,43 +165,43 @@ def fillBucket():
         transferlist = list(Path('.').glob("internal/training_set/abnormal/*.jpg"))
         cryptorand.shuffle(transferlist)
         for s in transferlist:
-            os.rename(s,"bucket/abnormal/"+str(s)[31:])
+            os.rename(s,"PLACE_IMAGES_HERE/abnormal/"+str(s)[31:])
         transferlist = list(Path('.').glob("internal/test_set/abnormal/*.jpg"))
         cryptorand.shuffle(transferlist)
         for s in transferlist:
-            os.rename(s,"bucket/abnormal/"+str(s)[27:])
+            os.rename(s,"PLACE_IMAGES_HERE/abnormal/"+str(s)[27:])
     else:
         print("No abnormal images found.")
     print("Images moved to bucket.")
 def portionBucket():
     cryptorand = SystemRandom()
     print("Portioning images from bucket..")
-    if len(os.listdir("bucket/normal/")) > 0:
+    if len(os.listdir("PLACE_IMAGES_HERE/normal/")) > 0:
         print("Portioning normal images..")
-        transferlist = list(Path('.').glob("bucket/normal/*.jpg"))
+        transferlist = list(Path('.').glob("PLACE_IMAGES_HERE/normal/*.jpg"))
         cryptorand.shuffle(transferlist)
         portionlimit = transferlist.__len__() / 3
         index = 0
         for s in transferlist:
             index += 1
             if index < portionlimit:
-                os.rename(s,"internal/test_set/normal/"+str(s)[14:])
+                os.rename(s,"internal/test_set/normal/"+str(s)[25:])
             else:
-                os.rename(s,"internal/training_set/normal/"+str(s)[14:])
+                os.rename(s,"internal/training_set/normal/"+str(s)[25:])
     else:
         print("No normal images found.")
-    if len(os.listdir("bucket/abnormal/")) > 0:
+    if len(os.listdir("PLACE_IMAGES_HERE/abnormal/")) > 0:
         print("Portioning abnormal images..")
-        transferlist = list(Path('.').glob("bucket/abnormal/*.jpg"))
+        transferlist = list(Path('.').glob("PLACE_IMAGES_HERE/abnormal/*.jpg"))
         cryptorand.shuffle(transferlist)
         portionlimit = transferlist.__len__() / 3
         index = 0
         for s in transferlist:
             index += 1
             if index < portionlimit:
-                os.rename(s,"internal/test_set/abnormal/"+str(s)[15:])
+                os.rename(s,"internal/test_set/abnormal/"+str(s)[27:])
             else:
-                os.rename(s,"internal/training_set/abnormal/"+str(s)[15:])
+                os.rename(s,"internal/training_set/abnormal/"+str(s)[27:])
     else:
         print("No abnormal images found.")
     print("Images portioned.")
@@ -599,7 +599,7 @@ while 1==1:
             filecount = list(Path('.').glob("internal/test_set/*/*.jpg")).__len__()
             if filecount == 0:
                 print("No test images found.") 
-                print("Recommended: add images into bucket/abnormal/ and bucket/normal/ then use !addimages")
+                print("Recommended: add images into PLACE_IMAGES_HERE/abnormal/ and PLACE_IMAGES_HERE/normal/ then use !addimages")
             globlist = Path('.').glob("internal/test_set/abnormal/*.jpg")
             for ginput in globlist:
                 ginput = str(ginput)

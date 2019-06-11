@@ -5,5 +5,5 @@ Run install.bat
 
 To use:
 
-Place images to be used to model training in bucket/abnormal/ or bucket/normal/
+Place images to be used to model training in PLACE_IMAGES_HERE/abnormal/ or PLACE_IMAGES_HERE/normal/, according to how you wish to categorize the images.
 Run start.bat
